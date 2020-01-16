@@ -1,0 +1,11 @@
+Zillow Web Services Identification (ZWSID) is: X1-ZWz17gbocdcidn_90hcq
+
+https://www.zillow.com/howto/api/APIOverview.htm
+https://www.zillow.com/howto/api/GetRegionChildren.htm
+
+https://www.zillow.com/howto/api/faq.htm
+
+http://www.zillow.com/webservice/GetRegionChildren.htm?zws-id=X1-ZWz17gbocdcidn_90hcq&state=wa&city=seattle&childtype=neighborhood
+
+
+http://www.zillow.com/webservice/GetUpdatedPropertyDetails.htm?zws-id=X1-ZWz17gbocdcidn_90hcq&zpid=48749425
