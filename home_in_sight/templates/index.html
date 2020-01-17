@@ -3,13 +3,17 @@
 {% block content%}
     <form method="POST">
         <label for="street">Street</label>
-        <input type="text">
+        <input type="text" name="street" id="street" required>
 
         <label for="city">City</label>
-        <input type="text">
+        <input type="text" name="city" id="city" required>
 
         <label for="state">State</label>
-        <input type="State">
+        <select name="state" id="state" required>
+            {% for state in states %}
+                <option value="{{ state }}">{{ state }}</option>
+            {% endfor %}
+        </select>
 
         <input type="submit">
     </form>

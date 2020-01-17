@@ -1,33 +1,42 @@
 from flask import (
-    Blueprint, render_template, request, session
+    Blueprint, render_template, request,
 )
 
 import requests
+import xml.etree.ElementTree as ET
 
-from xml.etree.ElementTree as ET
+from .data import zws_id, get_properties, STATES
 
-from .data import zws_id, get_properties
+bp = Blueprint('insight', __name__)
 
-bp = Blueprint('insight', __name__, url_prefix="/")
+
 
 @bp.route('/', methods=('GET', 'POST'))
-def test():
-    if session.method == 'POST':
-        get_updated_property_details = "http://www.zillow.com/webservice/GetUpdatedPropertyDetails.htm"
-        zp_id = session.form['zpid']
+def index():
+    if request.method == 'POST':
+        street = request.form['street']
+        city = request.form['city']
+        state = request.form['state']
 
-        url = f"{get_updated_property_details}?zws-id={zws_id}&zpid={zp_id}"
+        print(street, city, state)
+        url = deep_search_url(zws_id, street, city, state)
+        response = requests.get(url)
+        print(response.content)
 
-        #http://www.zillow.com/webservice/GetUpdatedPropertyDetails.htm?zws-id=<ZWSID>&zpid=48749425
+    return render_template("index.html", states=STATES)
 
-    data = requests.get(url)
-    print(data.content)
-    r = request()
+# @bp.route('/properties', methods=('GET'))
+# def properties():
+#     properties = get_properties()
 
-    return render_template("index.html")
+#     return render_template("properties.html", properties=properties)
 
-@bp.route('/properties', methods=('GET'))
-def properties():
-    properties = get_properties()
+def url_string(string:str):
+    return string.replace(" ", "+")
 
-    return render_template("properties.html", properties=properties)
+def deep_search_url(zws_id, street, city, state):
+    deep_search = "http://www.zillow.com/webservice/GetDeepSearchResults.htm"
+    street = url_string(street)
+
+    deep_search_url = f"{deep_search}?zws-id={zws_id}&address={street}&statezip={city}+{state}"
+    return deep_search_url
