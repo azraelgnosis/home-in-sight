@@ -1,6 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head></head>
-<body>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content%}
+    <form method="POST">
+        <label for="street">Street</label>
+        <input type="text">
+
+        <label for="city">City</label>
+        <input type="text">
+
+        <label for="state">State</label>
+        <input type="State">
+
+        <input type="submit">
+    </form>
+{% endblock %}
