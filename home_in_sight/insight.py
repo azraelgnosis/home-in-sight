@@ -6,7 +6,7 @@ import requests
 
 from xml.etree.ElementTree as ET
 
-from .data import zws_id
+from .data import zws_id, get_properties
 
 bp = Blueprint('insight', __name__, url_prefix="/")
 
@@ -22,6 +22,12 @@ def test():
 
     data = requests.get(url)
     print(data.content)
-    ET.parse
+    r = request()
 
-    return render_template("index.html", response=)
+    return render_template("index.html")
+
+@bp.route('/properties', methods=('GET'))
+def properties():
+    properties = get_properties()
+
+    return render_template("properties.html", properties=properties)

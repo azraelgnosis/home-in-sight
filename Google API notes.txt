@@ -1,0 +1,9 @@
+api key = AIzaSyDFF5l0pSdE1y_hbiAtEYERDcoUue-1MCs
+
+
+Places api https://console.developers.google.com/apis/library/places-backend.googleapis.com?id=ecefdd63-ee2b-4751-b6c3-8e9113791baf&project=spring-boot-maps-app2
+
+Place Search https://developers.google.com/places/web-service/search
+https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=library&inputtype=textquery&fields=formatted_address,name&locationbias=circle:2000000@47.6918452,-122.2226413&key=AIzaSyDFF5l0pSdE1y_hbiAtEYERDcoUue-1MCs
+
+Nearby Search billing info https://developers.google.com/maps/billing/gmp-billing#nearby-search
