@@ -6,6 +6,7 @@ from flask.cli import with_appcontext
 
 zws_id = 'X1-ZWz17gbocdcidn_90hcq'
 
+STATES = ["GA"]
 
 
 def get_properties():
@@ -52,5 +53,3 @@ def init_db_command():
     """Create new tables."""
     init_db()
     click.echo('Initialized the database.')
-
-STATES = ["GA"]

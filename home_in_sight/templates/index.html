@@ -17,4 +17,11 @@
 
         <input type="submit">
     </form>
+
+    {% if Property %}
+        <a href="{{ Property['url'] }}""><h1>{{ Property["location"]["address"] }}</h1></a>
+        <strong>Longitude: </strong><span>{{ Property["location"]["longitude"]}},
+         <strong>Latitude: </strong><span>{{ Property["location"]["latitude"]</span>
+    
+    {% endif %}
 {% endblock %}

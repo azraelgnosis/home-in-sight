@@ -1,18 +1,20 @@
 class Location:
     __slots__ = ["id", "location", "address", "street", "city", "state", "zipcode", "longitude", "latitude", "type"]
 
-    def __init__(self):
+    def __init__(self, street, city, state, zipcode=None, longitude=None, latitude=None):
         self.id = None
-        self.address = None
-        self.street = None
-        self.city = None
-        self.state = None
-        self.zipcode = None
-        self.longitude = None
-        self.latitude = None
+        self.street = street # street address
+        self.city = city
+        self.state = state
+        self.zipcode = zipcode
 
-    def _set_location(self):
-        self.location = f"{self.address} {self.city}, {self.state} {self.zipcode}"
+        self._set_address()
+
+        self.longitude = longitude
+        self.latitude = latitude
+        
+    def _set_address(self):
+        self.address = f"{self.street}, {self.city}, {self.state} {self.zipcode}"
 
     def json(self):
         json = {
@@ -34,27 +36,19 @@ class Location:
         return json
 
 class Property(Location):
-    __slots__ = ["id", "zpid", "location", "address", "street", "city", "state", "zipcode", "longitude", "latitude", "url", "images", "use_code", "beds", "baths", "property_area", "lot_area", "year_built", "year_updated"]
-    def __init__(self):
-        self.zpid = None
-        self.url = None
-        self.location = None
-        self.address = None
-        self.street = None
-        self.city = None
-        self.state = None
-        self.zipcode = None
-        self.longitude = None
-        self.latitude = None
-        self.url = None
-        self.images = []
-        self.use_code = None
-        self.beds = None
-        self.baths = None
-        self.property_area = None
-        self.lot_area = None
-        self.year_built = None
-        self.year_updated = None
+    __slots__ = ["zpid", "url", "images", "use_code", "beds", "baths", "property_area", "lot_area", "year_built", "year_updated"]
+    def __init__(self, street, city, state, zipcode=None, longitude=None, latitude=None, zpid=None, url=None, images=[], use_code=None, beds=None, baths=None, property_area=None, lot_area=None, year_built=None, year_updated=None):
+        super().__init__(street, city, state, zipcode, longitude, latitude)
+        self.zpid = zpid
+        self.url = url
+        self.images = images
+        self.use_code = use_code
+        self.beds = beds
+        self.baths = baths
+        self.property_area = property_area
+        self.lot_area = lot_area
+        self.year_built = year_built
+        self.year_updated = year_updated
 
     def json(self):
         json = {
@@ -72,7 +66,17 @@ class Property(Location):
                 "latitude": self.latitude
             },
             "images": [link for link in self.images],
-            # etc.
+            "use_code": self.use_code,
+            "rooms": {
+                "beds": self.beds,
+                "baths": self.baths
+            },            
+            "size": {
+                "property_area": self.property_area,
+                "lot_area": self.lot_area
+            },
+            "year_built": self.year_built,
+            "year_updated": self.year_updated
 
         }
 
