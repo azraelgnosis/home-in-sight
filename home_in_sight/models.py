@@ -36,9 +36,11 @@ class Location:
         return json
 
 class Property(Location):
-    __slots__ = ["zpid", "url", "images", "use_code", "beds", "baths", "property_area", "lot_area", "year_built", "year_updated"]
-    def __init__(self, street, city, state, zipcode=None, longitude=None, latitude=None, zpid=None, url=None, images=[], use_code=None, beds=None, baths=None, property_area=None, lot_area=None, year_built=None, year_updated=None):
+    __slots__ = ["FIPScounty", "county", "zpid", "url", "images", "use_code", "beds", "baths", "property_area", "lot_area", "year_built", "year_updated"]
+    def __init__(self, street, city, state, zipcode=None, longitude=None, latitude=None, FIPScounty=None, county=None, zpid=None, url=None, images=[], use_code=None, beds=None, baths=None, property_area=None, lot_area=None, year_built=None, year_updated=None):
         super().__init__(street, city, state, zipcode, longitude, latitude)
+        self.FIPScounty = FIPScounty
+        self.county = county
         self.zpid = zpid
         self.url = url
         self.images = images
@@ -59,9 +61,9 @@ class Property(Location):
                 "city": self.city,
                 "state": self.state,
                 "zip code": self.zipcode,
-                "address": f"{self.street}, {self.city}, {self.state} {self.zipcode}"
-            },
-            "coordinates": {
+                "FIPScounty": self.FIPScounty,
+                "county": self.county,
+                "address": f"{self.street}, {self.city}, {self.state} {self.zipcode}",
                 "longitude": self.longitude,
                 "latitude": self.latitude
             },
@@ -83,4 +85,9 @@ class Property(Location):
         return json
 
 class POI(Location):
-    __slots__ = ["name"]
+    __slots__ = ["name", "place_id"]
+
+    def __init__(self, street, city, state, zipcode=None, longitude=None, latitude=None, name=None, place_id=None):
+        super().__init__(street, city, state, zipcode, longitude, latitude)
+        self.name = name,
+        self.place_id = place_id

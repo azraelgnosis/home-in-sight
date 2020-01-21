@@ -3,12 +3,18 @@ import click
 import json
 from flask import current_app, g
 from flask.cli import with_appcontext
+import os
 
-zws_id = 'X1-ZWz17gbocdcidn_90hcq'
+config_path = os.path.join(os.getcwd(), "instance", "config.json") #current_app.config['CONFIG']
+with open(config_path, "r") as f:
+    config_data = json.load(f)
+    
+zws_id = config_data["zws_id"] # 'X1-ZWz17gbocdcidn_90hcq'
+google_api_key = config_data['google_api_key']
 
-STATES = ("GA")
+STATES = ("GA",)
 
-POIs = ("Library", )
+POI_types = ("Library", "Cafe")
 
 
 def get_properties():

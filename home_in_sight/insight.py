@@ -5,7 +5,7 @@ from flask import (
 import requests
 import xml.etree.ElementTree as ET
 
-from .data import zws_id, get_properties, STATES
+from .data import zws_id, google_api_key, get_properties, STATES
 from .models import Property
 
 bp = Blueprint('insight', __name__)
@@ -22,6 +22,8 @@ def index():
         response = requests.get(url)
         root = ET.fromstring(response.content)
         new_property = create_property(root)
+
+        get_POIs(new_property)
 
         return render_template("index.html", states=STATES, Property=new_property.json())
 
@@ -54,6 +56,7 @@ def create_property(root:ET.Element):
     zipcode = int(address.find("zipcode").text)
     latitude = float(address.find("latitude").text)
     longitude = float(address.find("longitude").text)
+    FIPScounty = int(result.find("FIPScounty").text)
     use_code = result.find("useCode").text
     year_built = int(result.find("yearBuilt").text)
     lot_area = int(result.find("lotSizeSqFt").text)
@@ -61,9 +64,10 @@ def create_property(root:ET.Element):
     baths = float(result.find("bathrooms").text)
     beds = int(result.find("bedrooms").text)
 
-    new_property =  Property(street, city, state, zipcode,
+    new_property = Property(street, city, state, zipcode,
         longitude = longitude,
         latitude = latitude,
+        FIPScounty = FIPScounty,
         zpid = zpid,
         url = url,
         use_code = use_code,
@@ -77,6 +81,17 @@ def create_property(root:ET.Element):
     return new_property
 
 
-def get_POIs(property:Property):
-    from .data import POIs
-    pass
+def get_POIs(Property:Property):
+    lng = Property.longitude
+    lat = Property.latitude
+
+    from .data import POI_types
+    find_place = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?inputtype=textquery"
+    radius = 16000 # radius in km
+    locationbias = f"&locationbias=circle:{radius}@{lat},{lng}"
+    fields = "&fields=" + ",".join(["formatted_address", "name", "geometry/location/lat", "geometry/location/lng", "place_id"])
+    find_place_url = f"{find_place}{fields}{locationbias}&key={google_api_key}"
+    
+    for Type in POI_types:
+        response = requests.get(find_place_url + f"&input={Type}")
+        print(response.json())
