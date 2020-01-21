@@ -6,12 +6,14 @@ from flask.cli import with_appcontext
 
 zws_id = 'X1-ZWz17gbocdcidn_90hcq'
 
-STATES = ["GA"]
+STATES = ("GA")
+
+POIs = ("Library", )
 
 
 def get_properties():
     if 'properties' not in g:
-        path = current_app.config['PROPERTIES']
+        path = current_app.config['DATA']
 
         with open(path, 'r') as f:
             properties = json.load(f)
@@ -24,6 +26,14 @@ def get_property(zpid:int):
         get_properties()
     
     return g.properties[zpid]
+
+
+
+
+
+
+
+
 
 def get_db():
     if 'db' not in g:

@@ -27,12 +27,6 @@ def index():
 
     return render_template("index.html", states=STATES)
 
-# @bp.route('/properties', methods=('GET'))
-# def properties():
-#     properties = get_properties()
-
-#     return render_template("properties.html", properties=properties)
-
 def url_string(string:str):
     return string.replace(" ", "+")
 
@@ -44,6 +38,8 @@ def deep_search_url(zws_id, street, city, state):
     return deep_search_url
 
 def create_property(root:ET.Element):
+    property_data = {} # TODO convert to dict
+
     request = root.find("request")
     street = request.find("address").text
     citystate = request.find("citystatezip").text.split(" ")
@@ -79,3 +75,8 @@ def create_property(root:ET.Element):
     )
 
     return new_property
+
+
+def get_POIs(property:Property):
+    from .data import POIs
+    pass
