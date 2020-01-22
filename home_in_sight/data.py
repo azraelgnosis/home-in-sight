@@ -14,7 +14,7 @@ google_api_key = config_data['google_api_key']
 
 STATES = ("GA",)
 
-POI_types = ("Library", "Cafe")
+POI_types = ("Restaurant", "Grocer", "Library", "Cafe", "Park", "Airport", "Lake", "River", "Hospital", "University", "Theater")
 
 
 def get_properties():

@@ -24,7 +24,7 @@ class Location:
         city = address[1]
         statezip = address[2].split(" ")
         state = statezip[0]
-        zipcode = statezip[1]
+        zipcode = statezip[1] if len(statezip)>1 else None
         return (street, city, state, zipcode)
 
     def json(self):
@@ -40,7 +40,7 @@ class Location:
                 "longitude": self.longitude,
                 "latitude": self.latitude
             },
-            # etc.
+            #! etc.
 
         }
 
@@ -52,21 +52,22 @@ class Location:
     @staticmethod
     def calc_distance(pointA:"Location", pointB:"Location", units="metric") -> float:
         "Given the coordinates of two locations, returns the distance in KM unless otherwise specified"
+        # uses the pythagorean theorem (i.e. 2D geometry) to calculate a linear distance as opposed to distance along a great circle but this is fine for short distances
         delta_lat = pointA.latitude - pointB.latitude
-        delta_lng = pointB.longitude - pointB.longitude
+        delta_lng = pointA.longitude - pointB.longitude
         delta = pow(pow(delta_lat, 2)+pow(delta_lng, 2), 0.5)
         distance = Location.degree_to_km(delta)
-        return distance
+        return round(distance, 2)
 
     @staticmethod
     def degree_to_km(degree:float) -> float:
         km_per_degree = 111
-        return degree * km_per_degree
+        return round(degree * km_per_degree, 2)
     
     @staticmethod
     def km_to_mi(KM:float) -> float:
         mi_per_km = 0.621371
-        return KM * mi_per_km
+        return round(KM * mi_per_km, 2)
 
     def __repr__(self):
         return f"{self.address}"

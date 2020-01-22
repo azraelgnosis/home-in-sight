@@ -26,12 +26,19 @@
         
         <hr />
         <h2><u>Nearby Points of Interest</u></h2>
-        {% for Type, POIs in Property.POIs.items() %}
-            <h3>{{ Type }}</h3>
-            {% for POI in POIs %}
-                <p>{{ POI }} {{ round(POI.km_to_mi(POI.distance), 2) }} miles away</p>
-            {% endfor %}
-             
-        {% endfor %}
+        <table>
+            <tbody>
+                {% for Type, POIs in Property.POIs.items() %}
+                    <tr><td><h3>{{ Type }}</h3></td></tr>
+                    {% for POI in POIs %}
+                        <tr>
+                            <td>{{ POI.name }}</td>
+                            <td>{{ POI.address }}</td>
+                            <td>{{ POI.km_to_mi(POI.distance) }} miles away</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
 {% endblock %}
