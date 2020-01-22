@@ -6,7 +6,7 @@ import requests
 import xml.etree.ElementTree as ET
 
 from .data import zws_id, google_api_key, get_properties, STATES
-from .models import Property
+from .models import Property, POI
 
 bp = Blueprint('insight', __name__)
 
@@ -25,7 +25,7 @@ def index():
 
         get_POIs(new_property)
 
-        return render_template("index.html", states=STATES, Property=new_property.json())
+        return render_template("index.html", states=STATES, Property=new_property)
 
     return render_template("index.html", states=STATES)
 
@@ -93,5 +93,10 @@ def get_POIs(Property:Property):
     find_place_url = f"{find_place}{fields}{locationbias}&key={google_api_key}"
     
     for Type in POI_types:
-        response = requests.get(find_place_url + f"&input={Type}")
+        url = find_place_url + f"&input={Type}"
+        print(url)
+        response = requests.get(url)
         print(response.json())
+        point = POI.from_json(response.json())
+        point.distance = POI.calc_distance(Property, point)
+        Property.add_POI(Type, point)
