@@ -5,6 +5,7 @@ from flask import current_app, g
 from flask.cli import with_appcontext
 import os
 
+data_path = os.path.join(os.getcwd(), "home_in_sight", "data")
 config_path = os.path.join(os.getcwd(), "instance", "config.json") #current_app.config['CONFIG']
 with open(config_path, "r") as f:
     config_data = json.load(f)
@@ -16,22 +17,81 @@ STATES = ("GA",)
 
 POI_types = ("Restaurant", "Grocer", "Library", "Cafe", "Park", "Airport", "Lake", "River", "Hospital", "University", "Theater")
 
+def get_FIPS_codes():
+    FIPS_path = os.path.join(data_path, "FIPS_codes.json")
+
+    with open(FIPS_path, "r") as f: 
+        FIPS_codes = json.load(f)
+    
+    return FIPS_codes
+
+def get_county(fips_code:str) -> str:
+    FIPS_codes = get_FIPS_codes()
+    state = FIPS_codes.get(fips_code[:2])
+    county = state.get(fips_code[2:])
+
+    return county
 
 def get_properties():
+    '''
+    Checks g to see if properties has already been loaded into memory.
+    If not, properties.json is loaded and added to g, then returned.
+    '''
     if 'properties' not in g:
-        path = current_app.config['DATA']
+        properties_path = os.path.join(data_path, "properties.json") # os.path.join(current_app.config['DATA'], "properties.json")
 
-        with open(path, 'r') as f:
+        with open(properties_path, 'r') as f:
             properties = json.load(f)
             g.properties = properties
 
     return g.properties
 
 def get_property(zpid:int):
-    if 'properties' not in g:
-        get_properties()
+    '''
+    Calls get_properties(), 
+    then returns the property matching the provided Zillow id
+    '''
+    properties = get_properties()
     
-    return g.properties[zpid]
+    return properties[zpid]
+
+def record_property(Property:"Property"):
+    '''
+    Loads properties, then adds provided property to the
+    dict
+    '''
+    properties = get_properties()
+
+    state = Property.state
+    county = Property.county
+
+    if not properties.get(state):
+        properties[state] = {}
+    state_properties = properties.get(state)
+
+    if not state_properties.get(county):
+        state_properties[county] = []
+    county_properties = state_properties.get(Property.county)
+
+    if Property.json() not in county_properties:
+        county_properties.append(Property.json())
+
+def record_properties(new_properties:list):
+    '''
+    Loads properties.json, iterates through new_properties
+    then writes properties to properties.json
+    '''
+    properties = get_properties()
+
+    for Property in new_properties:
+        record_property(Property)
+
+    properties_path = os.path.join(data_path, "properties.json")
+    with open(properties_path, "w") as f:
+        json.dump(properties, f)
+
+
+
 
 
 

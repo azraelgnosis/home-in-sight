@@ -5,7 +5,7 @@ from flask import (
 import requests
 import xml.etree.ElementTree as ET
 
-from .data import zws_id, google_api_key, get_properties, STATES
+from .data import zws_id, google_api_key, get_properties, STATES, record_properties
 from .models import Property, POI
 
 bp = Blueprint('insight', __name__)
@@ -24,6 +24,7 @@ def index():
         new_property = create_property(root)
 
         get_POIs(new_property)
+        record_properties([new_property])
 
         return render_template("index.html", states=STATES, Property=new_property)
 
@@ -56,7 +57,7 @@ def create_property(root:ET.Element):
     zipcode = int(address.find("zipcode").text)
     latitude = float(address.find("latitude").text)
     longitude = float(address.find("longitude").text)
-    FIPScounty = int(result.find("FIPScounty").text)
+    FIPS_code = result.find("FIPScounty").text
     use_code = result.find("useCode").text
     year_built = int(result.find("yearBuilt").text)
     lot_area = int(result.find("lotSizeSqFt").text)
@@ -67,7 +68,7 @@ def create_property(root:ET.Element):
     new_property = Property(street, city, state, zipcode,
         longitude = longitude,
         latitude = latitude,
-        FIPScounty = FIPScounty,
+        FIPS_code = FIPS_code,
         zpid = zpid,
         url = url,
         use_code = use_code,

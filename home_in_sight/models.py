@@ -1,7 +1,9 @@
-class Location:
-    __slots__ = ["id", "address", "street", "city", "state", "zipcode", "longitude", "latitude", "type"]
+from .data import get_county
 
-    def __init__(self, street, city, state, zipcode=None, longitude=None, latitude=None):
+class Location:
+    __slots__ = ["id", "address", "street", "city", "state", "zipcode", "county", "longitude", "latitude", "type"]
+
+    def __init__(self, street, city, state, zipcode=None, longitude=None, latitude=None, type=None):
         self.id = None
         self.street = street # street address
         self.city = city
@@ -74,10 +76,10 @@ class Location:
         
 
 class Property(Location):
-    __slots__ = ["FIPScounty", "county", "zpid", "url", "images", "use_code", "beds", "baths", "property_area", "lot_area", "year_built", "year_updated", "POIs"]
-    def __init__(self, street, city, state, zipcode=None, longitude=None, latitude=None, FIPScounty=None, county=None, zpid=None, url=None, images=[], use_code=None, beds=None, baths=None, property_area=None, lot_area=None, year_built=None, year_updated=None):
-        super().__init__(street, city, state, zipcode, longitude, latitude)
-        self.FIPScounty = FIPScounty
+    __slots__ = ["FIPS_code", "zpid", "url", "images", "use_code", "beds", "baths", "property_area", "lot_area", "year_built", "year_updated", "POIs"]
+    def __init__(self, street, city, state, zipcode=None, longitude=None, latitude=None, FIPS_code=None, county=None, zpid=None, url=None, images=[], use_code=None, beds=None, baths=None, property_area=None, lot_area=None, year_built=None, year_updated=None):
+        super().__init__(street, city, state, zipcode, longitude, latitude, type="Property")
+        self.FIPS_code = FIPS_code
         self.county = county
         self.zpid = zpid
         self.url = url
@@ -90,11 +92,17 @@ class Property(Location):
         self.year_built = year_built
         self.year_updated = year_updated
 
+        self._set_county()
+
         from .data import POI_types
         self.POIs = {Type: [] for Type in POI_types}
 
+    def _set_county(self):
+        self.county = get_county(self.FIPS_code)
+
     def json(self):
         json = {
+            "id": self.id,
             "zpid": self.zpid,
             "url": self.url,
             "location": {
@@ -102,12 +110,13 @@ class Property(Location):
                 "city": self.city,
                 "state": self.state,
                 "zip code": self.zipcode,
-                "FIPScounty": self.FIPScounty,
+                "FIPS_code": self.FIPS_code,
                 "county": self.county,
-                "address": f"{self.street}, {self.city}, {self.state} {self.zipcode}",
+                "address": self.address,
                 "longitude": self.longitude,
                 "latitude": self.latitude
             },
+            "type": "Property",
             "images": [link for link in self.images],
             "use_code": self.use_code,
             "rooms": {
@@ -120,7 +129,6 @@ class Property(Location):
             },
             "year_built": self.year_built,
             "year_updated": self.year_updated
-
         }
 
         return json
