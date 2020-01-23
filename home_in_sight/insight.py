@@ -5,7 +5,7 @@ from flask import (
 import requests
 import xml.etree.ElementTree as ET
 
-from .data import zws_id, google_api_key, get_properties, STATES, record_properties
+from .data import zws_id, google_api_key, get_properties, get_property, STATES, record_properties
 from .models import Property, POI
 
 bp = Blueprint('insight', __name__)
@@ -17,11 +17,14 @@ def index():
         city = request.form['city']
         state = request.form['state']
 
-        url = deep_search_url(zws_id, street, city, state)
-        print(url)
-        response = requests.get(url)
-        root = ET.fromstring(response.content)
-        new_property = create_property(root)
+        new_property = get_property(street, city, state)
+            
+        if not new_property:
+            url = deep_search_url(zws_id, street, city, state)
+            print(url)
+            response = requests.get(url)
+            root = ET.fromstring(response.content)
+            new_property = create_property(root)
 
         get_POIs(new_property)
         record_properties([new_property])

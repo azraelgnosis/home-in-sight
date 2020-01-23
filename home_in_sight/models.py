@@ -102,33 +102,35 @@ class Property(Location):
 
     def json(self):
         json = {
-            "id": self.id,
-            "zpid": self.zpid,
-            "url": self.url,
-            "location": {
-                "street": self.street,
-                "city": self.city,
-                "state": self.state,
-                "zip code": self.zipcode,
-                "FIPS_code": self.FIPS_code,
-                "county": self.county,
-                "address": self.address,
-                "longitude": self.longitude,
-                "latitude": self.latitude
-            },
-            "type": "Property",
-            "images": [link for link in self.images],
-            "use_code": self.use_code,
-            "rooms": {
-                "beds": self.beds,
-                "baths": self.baths
-            },            
-            "size": {
-                "property_area": self.property_area,
-                "lot_area": self.lot_area
-            },
-            "year_built": self.year_built,
-            "year_updated": self.year_updated
+            f"{self.street}, {self.city}, {self.state}": {
+                "id": self.id,
+                "zpid": self.zpid,
+                "url": self.url,
+                "location": {
+                    "street": self.street,
+                    "city": self.city,
+                    "state": self.state,
+                    "zip code": self.zipcode,
+                    "FIPS_code": self.FIPS_code,
+                    "county": self.county,
+                    "address": self.address,
+                    "longitude": self.longitude,
+                    "latitude": self.latitude
+                },
+                "type": "Property",
+                "images": [link for link in self.images],
+                "use_code": self.use_code,
+                "rooms": {
+                    "beds": self.beds,
+                    "baths": self.baths
+                },            
+                "size": {
+                    "property_area": self.property_area,
+                    "lot_area": self.lot_area
+                },
+                "year_built": self.year_built,
+                "year_updated": self.year_updated
+            }
         }
 
         return json

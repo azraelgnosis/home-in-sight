@@ -46,14 +46,23 @@ def get_properties():
 
     return g.properties
 
-def get_property(zpid:int):
+def get_property(street:str, city:str, state:str):
     '''
     Calls get_properties(), 
     then returns the property matching the provided Zillow id
     '''
     properties = get_properties()
+    state_counties = properties.get(state)
+
+    try:
+        for county, county_properties in state_counties.items():
+            for Property in county_properties:
+                if f"{street}, {city}, {state}" == list(Property)[0]:
+                    return Property
+    except TypeError:
+        return None
     
-    return properties[zpid]
+    return None
 
 def record_property(Property:"Property"):
     '''
