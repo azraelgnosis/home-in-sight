@@ -48,17 +48,20 @@ def create_property(root:ET.Element):
     property_data = {} # TODO convert to dict
 
     request = root.find("request")
-    street = request.find("address").text
+    # street = request.find("address").text #? appears later in XML
     citystate = request.find("citystatezip").text.split(" ")
-    city = " ".join(citystate[0:-1])
-    state = "".join(citystate[-1:])
+    # city = " ".join(citystate[0:-1]) #? appears later in XML 
+    # state = "".join(citystate[-1:]) #? appears later in XML 
     response = root.find("response")
     result = response.find("results").find("result")
     zpid = int(result.find("zpid").text)
     links = result.find("links")
     url = links.find("homedetails").text
     address = result.find("address")
+    street = address.find("street").text
     zipcode = int(address.find("zipcode").text)
+    city = address.find("city").text
+    state = address.find("state").text
     latitude = float(address.find("latitude").text)
     longitude = float(address.find("longitude").text)
     FIPS_code = result.find("FIPScounty").text
@@ -87,8 +90,8 @@ def create_property(root:ET.Element):
 
 
 def get_POIs(Property:Property):
-    lng = Property['location'].get("longitude")
-    lat = Property['location'].get("latitude")
+    lng = Property.location.get("longitude")
+    lat = Property.location.get("latitude")
 
     from .data import POI_types
     find_place = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?inputtype=textquery"

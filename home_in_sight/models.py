@@ -13,7 +13,7 @@ class Location:
         self.latitude = latitude
 
         self._set_address()
-        self._set_location()
+        Location._set_location(self) # self._set_location() defaults to subclasses implementation when super.__init__() is called
         
     def _set_address(self):
         self.address = f"{self.street}, {self.city}, {self.state} {self.zipcode}"
