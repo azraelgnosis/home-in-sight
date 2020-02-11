@@ -1,7 +1,7 @@
 from .data import get_county
 
 class Location:
-    __slots__ = ["id", "address", "street", "city", "state", "zipcode", "county", "longitude", "latitude", "type"]
+    __slots__ = ["id", "address", "street", "city", "state", "zipcode", "county", "longitude", "latitude", "type", "location"]
 
     def __init__(self, street, city, state, zipcode=None, longitude=None, latitude=None, type=None):
         self.id = None
@@ -9,14 +9,26 @@ class Location:
         self.city = city
         self.state = state
         self.zipcode = zipcode
-
-        self._set_address()
-
         self.longitude = longitude
         self.latitude = latitude
+
+        self._set_address()
+        self._set_location()
         
     def _set_address(self):
         self.address = f"{self.street}, {self.city}, {self.state} {self.zipcode}"
+    def _set_location(self):
+        self.location = {
+            "street": self.street,
+            "city": self.city,
+            "state": self.state,
+            "zip_code": self.zipcode,
+            "FIPS_code": "", #!
+            "county": "", #!
+            "address": self.address,
+            "longitude": self.longitude,
+            "latitude": self.latitude
+        }
 
     @staticmethod
     def split_address(address:str) -> tuple:
@@ -93,6 +105,7 @@ class Property(Location):
         self.year_updated = year_updated
 
         self._set_county()
+        self._set_location()
 
         from .data import POI_types
         self.POIs = {Type: [] for Type in POI_types}
@@ -100,37 +113,40 @@ class Property(Location):
     def _set_county(self):
         self.county = get_county(self.FIPS_code)
 
+    def _set_location(self):
+        super()._set_location()
+        self.location["FIPS_code"] = self.FIPS_code
+        self.location["county"] = self.county
+
     def json(self):
         json = {
-            f"{self.street}, {self.city}, {self.state}": {
-                "id": self.id,
-                "zpid": self.zpid,
-                "url": self.url,
-                "location": {
-                    "street": self.street,
-                    "city": self.city,
-                    "state": self.state,
-                    "zip code": self.zipcode,
-                    "FIPS_code": self.FIPS_code,
-                    "county": self.county,
-                    "address": self.address,
-                    "longitude": self.longitude,
-                    "latitude": self.latitude
-                },
-                "type": "Property",
-                "images": [link for link in self.images],
-                "use_code": self.use_code,
-                "rooms": {
-                    "beds": self.beds,
-                    "baths": self.baths
-                },            
-                "size": {
-                    "property_area": self.property_area,
-                    "lot_area": self.lot_area
-                },
-                "year_built": self.year_built,
-                "year_updated": self.year_updated
-            }
+            "id": self.id,
+            "zpid": self.zpid,
+            "url": self.url,
+            "location": {
+                "street": self.street,
+                "city": self.city,
+                "state": self.state,
+                "zip code": self.zipcode,
+                "FIPS_code": self.FIPS_code,
+                "county": self.county,
+                "address": self.address,
+                "longitude": self.longitude,
+                "latitude": self.latitude
+            },
+            "type": "Property",
+            "images": [link for link in self.images],
+            "use_code": self.use_code,
+            "rooms": {
+                "beds": self.beds,
+                "baths": self.baths
+            },            
+            "size": {
+                "property_area": self.property_area,
+                "lot_area": self.lot_area
+            },
+            "year_built": self.year_built,
+            "year_updated": self.year_updated
         }
 
         return json

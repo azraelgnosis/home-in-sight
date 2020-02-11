@@ -1,1 +1,40 @@
-{"GA": {"DeKalb": [{"5482 Martins Crossing, Stone Mountain, GA": {"id": null, "zpid": 14488663, "url": "http://www.zillow.com/homedetails/5482-Martins-Crossing-Rd-Stone-Mountain-GA-30088/14488663_zpid/", "location": {"street": "5482 Martins Crossing", "city": "Stone Mountain", "state": "GA", "zip code": 30088, "FIPS_code": "13089", "county": "DeKalb", "address": "5482 Martins Crossing, Stone Mountain, GA 30088", "longitude": -84.177178, "latitude": 33.775413}, "type": "Property", "images": [], "use_code": "SingleFamily", "rooms": {"beds": 3, "baths": 2.0}, "size": {"property_area": 1326, "lot_area": 43560}, "year_built": 1980, "year_updated": null}}]}}
+{
+    "GA": {
+        "DeKalb": [
+            {
+                "5482 Martins Crossing, Stone Mountain, GA": {
+                    "id": null,
+                    "zpid": 14488663,
+                    "url": "http://www.zillow.com/homedetails/5482-Martins-Crossing-Rd-Stone-Mountain-GA-30088/14488663_zpid/",
+                    "location": {
+                        "street": "5482 Martins Crossing",
+                        "city": "Stone Mountain",
+                        "state": "GA",
+                        "zip code": 30088,
+                        "FIPS_code": "13089",
+                        "county": "DeKalb",
+                        "address": "5482 Martins Crossing, Stone Mountain, GA 30088",
+                        "longitude": -84.177178,
+                        "latitude": 33.775413
+                    },
+                    "type": "Property",
+                    "images": [],
+                    "use_code": "SingleFamily",
+                    "rooms": {
+                        "beds": 3,
+                        "baths": 2.0
+                    },
+                    "size": {
+                        "property_area": 1326,
+                        "lot_area": 43560
+                    },
+                    "year_built": 1980,
+                    "year_updated": null
+                }
+            }
+        ],
+        "Gwinnett County": [
+            
+        ]
+    }
+}

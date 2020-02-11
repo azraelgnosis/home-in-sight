@@ -23,6 +23,7 @@ def index():
             url = deep_search_url(zws_id, street, city, state)
             print(url)
             response = requests.get(url)
+            #! add error for if property isn't found
             root = ET.fromstring(response.content)
             new_property = create_property(root)
 
@@ -86,12 +87,12 @@ def create_property(root:ET.Element):
 
 
 def get_POIs(Property:Property):
-    lng = Property.longitude
-    lat = Property.latitude
+    lng = Property['location'].get("longitude")
+    lat = Property['location'].get("latitude")
 
     from .data import POI_types
     find_place = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?inputtype=textquery"
-    radius = 16000 # radius in km
+    radius = 1600 # radius in meters
     locationbias = f"&locationbias=circle:{radius}@{lat},{lng}"
     fields = "&fields=" + ",".join(["formatted_address", "name", "geometry/location/lat", "geometry/location/lng", "place_id"])
     find_place_url = f"{find_place}{fields}{locationbias}&key={google_api_key}"

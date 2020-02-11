@@ -101,15 +101,6 @@ def record_properties(new_properties:list):
 
 
 
-
-
-
-
-
-
-
-
-
 def get_db():
     if 'db' not in g:
         g.db = sqlite3.connect(
