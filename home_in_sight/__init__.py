@@ -33,4 +33,7 @@ def create_app(test_config=None):
     from . import insight
     app.register_blueprint(insight.bp)
 
+    from . import social
+    app.register_blueprint(social.bp)
+
     return app
